@@ -28,6 +28,9 @@ def import_file(
     password = _prompt_password(confirm=False)
     store = _get_store(vault_path, password)
     pairs = import_from_file(env_file)
+    if not pairs:
+        click.echo("No variables found in file.")
+        return
     skipped = 0
     imported = 0
     for key, value in pairs.items():
@@ -53,6 +56,12 @@ def import_env_cmd(
     password = _prompt_password(confirm=False)
     store = _get_store(vault_path, password)
     pairs = import_from_env(keys=list(keys))
+    missing = [k for k in keys if k not in pairs]
+    if missing:
+        click.echo(
+            f"Warning: the following keys were not found in the environment: {', '.join(missing)}",
+            err=True,
+        )
     imported = 0
     for key, value in pairs.items():
         if not overwrite and store.get(key) is not None:
