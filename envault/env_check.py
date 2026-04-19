@@ -39,6 +39,14 @@ def check_env(vault_data: dict[str, str]) -> List[CheckResult]:
     return results
 
 
+def summary(results: List[CheckResult]) -> dict[str, int]:
+    """Return counts of each status in the results list."""
+    counts: dict[str, int] = {"ok": 0, "missing": 0, "mismatch": 0}
+    for r in results:
+        counts[r.status()] += 1
+    return counts
+
+
 def format_check(results: List[CheckResult], show_ok: bool = True) -> str:
     lines = []
     icons = {"ok": "✓", "missing": "✗", "mismatch": "~"}
