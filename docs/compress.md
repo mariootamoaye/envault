@@ -39,6 +39,21 @@ ratio = compression_ratio(my_vault_data)
 print(f"Compression ratio: {ratio:.2%}")
 ```
 
+### `is_compressed(blob: str) -> bool`
+
+Returns `True` if the given string appears to be a valid compressed blob produced by `compress_dict` (i.e., it is valid base64 that decodes to a gzip stream). Returns `False` otherwise. Does **not** raise on invalid input.
+
+Useful for detecting whether a stored value needs to be decompressed before use.
+
+```python
+from envault.compress import is_compressed
+
+if is_compressed(value):
+    data = decompress_dict(value)
+else:
+    data = json.loads(value)
+```
+
 ## Error Handling
 
 | Situation | Exception |
