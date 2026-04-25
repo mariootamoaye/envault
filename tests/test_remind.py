@@ -43,6 +43,11 @@ def test_set_reminder_invalid_days_raises(vault_dir):
         set_reminder(vault_dir, "API_KEY", 0)
 
 
+def test_set_reminder_negative_days_raises(vault_dir):
+    with pytest.raises(ValueError):
+        set_reminder(vault_dir, "API_KEY", -5)
+
+
 def test_remove_reminder_returns_true_when_exists(vault_dir):
     set_reminder(vault_dir, "SECRET", 7)
     assert remove_reminder(vault_dir, "SECRET") is True
@@ -70,6 +75,11 @@ def test_get_due_includes_today(vault_dir):
     save_reminders(vault_dir, {"TODAY_KEY": today.isoformat()})
     due = get_due(vault_dir)
     assert any(d["key"] == "TODAY_KEY" for d in due)
+
+
+def test_get_due_returns_empty_when_no_reminders(vault_dir):
+    due = get_due(vault_dir)
+    assert due == []
 
 
 def test_list_reminders_sorted_by_date(vault_dir):
