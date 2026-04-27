@@ -48,6 +48,13 @@ def test_import_from_file(tmp_path: Path):
     assert result == {"HOST": "localhost", "PORT": "5432"}
 
 
+def test_import_from_file_missing_raises(tmp_path: Path):
+    """import_from_file should raise FileNotFoundError for a non-existent path."""
+    missing = tmp_path / "does_not_exist.env"
+    with pytest.raises(FileNotFoundError):
+        import_from_file(missing)
+
+
 def test_import_from_env_all(monkeypatch):
     monkeypatch.setenv("_TEST_VAR", "hello")
     result = import_from_env()
